@@ -1,18 +1,34 @@
 import { Formik } from "formik";
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Platform } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native";
 import { globalStyle } from "../styles/main";
-
+import {API_URL, DEV} from "@env"
+import axios from "axios";
 
 
 export default function RegisterForm() {
+    const initialValues = {Email: '', Username: '', Password: '', ConfirmPassword: ''}
+    let api = API_URL
+    if ( DEV && Platform.OS == 'android') api = 'http://10.0.2.2:5000'
+    console.log(DEV)
     return (
         <View style={styles.container}>
             <Formik
-                initialValues={{Email: '', Username: '', Password: '', ConfirmPassword: ''}}
-                onSubmit={(values) => {
-
+                initialValues={initialValues}
+                onSubmit={(values, { resetForm }) => {
+                    axios.post(`${api}/users/register`, {
+                        email: values.Email, 
+                        username: values.Username,
+                        password: values.Password,
+                        password2: values.ConfirmPassword,
+                    }).then(function (response) {
+                        console.log(response);
+                        resetForm({values: initialValues})
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
                 }}
             >
                 {(props) => (
@@ -48,8 +64,8 @@ export default function RegisterForm() {
                             style={styles.input}
                         />
 
-                        <TouchableOpacity style={[globalStyle.greenBtn, styles.submitBtn]}>
-                        <Text style={[globalStyle.textMd, globalStyle.textWhite]}>Login</Text>
+                        <TouchableOpacity onPress={props.handleSubmit} style={[globalStyle.greenBtn, styles.submitBtn]}>
+                        <Text style={[globalStyle.textMd, globalStyle.textWhite]}>Register</Text>
                         </TouchableOpacity>
 
                     </View>

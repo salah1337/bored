@@ -6,12 +6,16 @@ import ShopModal from './ShopModal';
 import LoginModal from './LoginModal';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { globalStyle } from '../styles/main';
+import { observer } from 'mobx-react';
+import { userStore } from '../store/User';
 
-export default function topBar({ navigation }) {
+export default topBar = observer(({ navigation }) => {
     const backHomePressHandler = () => {
         navigation.goBack()
     }
     const [LoginModalVisible, setLoginModalVisible] = useState(false)
+    const [VIPModalVisible, setVIPModalVisible] = useState(false)
+    const [ShopModalVisible, setShopModalVisible] = useState(false)
     return (
         <View style={styles.topBar}>
 
@@ -20,20 +24,21 @@ export default function topBar({ navigation }) {
         </TouchableOpacity>
         <View style={styles.topBarBtns}>
 
-            <TouchableOpacity style={[styles.topBarBtn, globalStyle.grayBtn]}>
+            <TouchableOpacity onPress={() => setVIPModalVisible(true)} style={[styles.topBarBtn, globalStyle.grayBtn]}>
                 <Text>VIP</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => setLoginModalVisible(true)} style={[styles.topBarBtn, globalStyle.yellowBtn, styles.loginBtn]}>
                 <Text>Login</Text>
+                <Text>{userStore.currentUser.user != undefined ? userStore.currentUser.user.username : 'not logged in'}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.topBarBtn, globalStyle.grayBtn]}>
+            <TouchableOpacity onPress={() => setShopModalVisible(true)}  style={[styles.topBarBtn, globalStyle.grayBtn]}>
                 <Text>Shop</Text>
             </TouchableOpacity>
 
         </View>
-        <Text style={[globalStyle.textWhite, globalStyle.textMd]} >Online:69</Text>
+        <Text style={[globalStyle.textWhite, globalStyle.textMd, {width: 250, textAlign: 'right'}]} >Online: <Text style={globalStyle.textGreen}>{userStore.getUserCount}</Text></Text>
 
         <Modal style={styles.modal} visible={LoginModalVisible}>
             <ImageBackground resizeMode="repeat" source={require('../assets/img/bg.png')} style={styles.container}>
@@ -42,9 +47,23 @@ export default function topBar({ navigation }) {
             </ImageBackground>
         </Modal>
 
+        <Modal style={styles.modal} visible={VIPModalVisible}>
+            <ImageBackground resizeMode="repeat" source={require('../assets/img/bg.png')} style={styles.container}>
+                <VIPModal closeModal={() => setVIPModalVisible(false)} />
+
+            </ImageBackground>
+        </Modal>
+
+        <Modal style={styles.modal} visible={ShopModalVisible}>
+            <ImageBackground resizeMode="repeat" source={require('../assets/img/bg.png')} style={styles.container}>
+                <ShopModal closeModal={() => setShopModalVisible(false)} />
+
+            </ImageBackground>
+        </Modal>
+
         </View>
     )
-}
+})
 
 const {ids, styles} = StyleSheet.create({
     container: {
@@ -71,7 +90,8 @@ const {ids, styles} = StyleSheet.create({
     topBarBtns: {
         flexDirection: 'row',
         alignItems: 'flex-end',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        width: 250
     },
     topBarBtn: {
         marginHorizontal: 5,

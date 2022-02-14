@@ -1,12 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
+import { observer } from 'mobx-react';
+import React from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, Button } from 'react-native';
 import Navigator from './routes/homeStack'
 
-export default function App() {
+export default observer(function App() {
+  
   return (
     <Navigator  style={styles.container}/>
   );
-}
+})
 
 const styles = StyleSheet.create({
   container: {

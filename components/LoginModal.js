@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import ForgotPasswordForm from "./ForgotPasswordForm";
-import { useState } from "react";
+import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { globalStyle } from "../styles/main";
 
@@ -14,11 +14,14 @@ export default function LoginModal({ closeModal }) {
 
     return (
         <ImageBackground resizeMode="repeat" source={require('../assets/img/bg.png')} style={styles.container}>
-            <Ionicons name="close" size={32} color="white" onPress={closeModal} />
+            <TouchableOpacity onPress={closeModal} >
+                <Text style={[globalStyle.textWhite]}>close</Text>
+            </TouchableOpacity>
+            {/* <Ionicons name="close" size={32} color="white" onPress={closeModal} /> */}
             <Image style={styles.logo} source={require('../assets/img/video-box-logo.png')} />
             
             { form == 'login' && 
-            <LoginForm/> }
+            <LoginForm onFinish={closeModal}/> }
             { form == 'register' && 
             <RegisterForm/> }
             { form == 'forgotPassword' && 

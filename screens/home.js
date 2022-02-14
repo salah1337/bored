@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground, Button } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { globalStyle } from '../styles/main';
 
 export default function Home({ navigation }) {
     const chatPressHandler = () => {
@@ -12,11 +14,17 @@ export default function Home({ navigation }) {
         <ImageBackground resizeMode="repeat" source={require('../assets/img/bg.png')} style={styles.container}>
 
         <Image style={styles.logo} source={require('../assets/img/video-box-logo.png')} />
-        <Text>U Bored?</Text>
+        <Text style={[globalStyle.textMd, globalStyle.textWhite]}>U Bored?</Text>
         
         <View style={styles.buttonsContainer}>
-          <Button title="chat" onPress={chatPressHandler} style={styles.buttons} />
-          <Button title="video" onPress={videoPressHandler} style={styles.buttons} />
+          <TouchableOpacity onPress={chatPressHandler} style={[globalStyle.greenBtn, styles.buttons]}>
+          <Image style={styles.btnImage} source={require('../assets/img/chat.png')} />
+            <Text style={[globalStyle.textWhite, globalStyle.textBold]}>Chat</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={videoPressHandler} style={[globalStyle.greenBtn, styles.buttons]}>
+          <Image style={styles.btnImage} source={require('../assets/img/video.png')} />
+            <Text style={[globalStyle.textWhite, globalStyle.textBold]}>Video</Text>
+          </TouchableOpacity>
         </View>
         
         
@@ -32,16 +40,28 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     logo: {
-      height: 500,
+      height: 200,
       width: 500,
       resizeMode: 'contain'
     },
     buttonsContainer: {
       flexDirection: 'row',
+      marginVertical: 20
     },
     buttons: {
       margin: 10,
-      padding: 10 
+      padding: 10,
+      height: 200,
+      width: 200,
+      justifyContent: 'center', 
+      alignItems: 'center',
+      borderRadius: 4
+    },
+    btnImage: {
+      height: 100,
+      width: 100,
+      resizeMode: 'contain'
+
     }
   });
   

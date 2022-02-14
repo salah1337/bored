@@ -1,18 +1,34 @@
+import axios from "axios";
 import { Formik } from "formik";
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Platform } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native";
 import { globalStyle } from "../styles/main";
+import {API_URL, DEV} from "@env"
+import {userStore} from '../store/User'
 
-
-
-export default function LoginForm() {
+export default function LoginForm({onFinish}) {
+    const initialValues = {Email: '', Password: ''}
+    let api = 'https://b446-196-70-69-208.ngrok.io'
+    if ( DEV && Platform.OS == 'android') api = 'http://10.0.2.2:5000'
+    console.log(DEV)
     return (
         <View style={styles.container}>
             <Formik
-                initialValues={{Email: '', Password: ''}}
-                onSubmit={(values) => {
-
+                initialValues={initialValues}
+                onSubmit={(values, { resetForm }) => {
+                    axios.post(`${api}/users/login`, {
+                        email: values.Email, 
+                        password: values.Password,
+                    }).then(function (response) {
+                        userStore.setUser({user: response.data.user, tocken: response.data.tocken})
+                        console.log(userStore.currentUser.user.username);
+                        resetForm({values: initialValues})
+                        onFinish()
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
                 }}
             >
                 {(props) => (
@@ -33,7 +49,7 @@ export default function LoginForm() {
                             style={styles.input}
                         />
 
-                        <TouchableOpacity style={[globalStyle.greenBtn, styles.submitBtn]}>
+                        <TouchableOpacity onPress={props.handleSubmit} style={[globalStyle.greenBtn, styles.submitBtn]}>
                         <Text style={[globalStyle.textMd, globalStyle.textWhite]}>Login</Text>
                         </TouchableOpacity>
 

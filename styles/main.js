@@ -11,6 +11,9 @@ export const globalStyle = StyleSheet.create({
     textGreen: {
         color: 'rgb(5, 233, 5)'
     },
+    textBold: {
+        fontWeight: "600"
+    },
     greenBtn: {
         backgroundColor: 'rgb(5, 233, 5)',
         shadowColor: "rgb(6, 167, 25)",
